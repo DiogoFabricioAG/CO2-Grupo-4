@@ -38,9 +38,13 @@ jobs:
           python clima_scraper.py
           
       - name: Commit y Push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token automático de GitHub
         run: |
           git config --global user.email "diogo.abregu.g@uni.pe"
-          git config --global user.name "DiogoAbreguAG"
+          git config --global user.name "DiogoFabricioAG"
+          git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@github.com/${{ github.repository }}.git"
           git add datos_clima/*
           git commit -m "Actualización automática: $(date +'%Y-%m-%d %H:%M')"
-          git push
+          git pull --rebase  # Actualizar antes de push
+          git push origin HEAD:main
