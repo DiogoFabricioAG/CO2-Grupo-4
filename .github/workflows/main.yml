@@ -2,8 +2,7 @@ name: Scrape Climático Diario
 
 on:
   schedule:
-    # Hora Perú: 12:00 PM (UTC-5) = 17:00 UTC
-    - cron: "0 17 * * *"
+    - cron: "0 17 * * *"  # 12 PM Hora Peruana (UTC-5)
   workflow_dispatch:
 
 jobs:
@@ -18,23 +17,30 @@ jobs:
         with:
           python-version: "3.10"
           
+      - name: Instalar Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable  # Versión estable de Chrome
+          
       - name: Instalar dependencias
         run: |
           sudo apt-get update
-          sudo apt-get install -y chromium-browser chromium-chromedriver
-          python -m pip install selenium webdriver-manager pytz
+          sudo apt-get install -y chromium-chromedriver
+          python -m pip install -r requirements.txt
           
-      - name: Crear carpeta de datos
-        run: mkdir -p datos_clima
+      - name: Crear estructura de carpetas
+        run: |
+          mkdir -p datos_clima
           
       - name: Ejecutar scraper
-        working-directory: ./Codigos  # Cambiamos el directorio de trabajo
-        run: python clima_scraper.py
-        
+        working-directory: ./Codigos
+        run: |
+          python clima_scraper.py
+          
       - name: Commit y Push
         run: |
           git config --global user.email "diogo.abregu.g@uni.pe"
-          git config --global user.name "DiogoFabricioAG"
+          git config --global user.name "DiogoAbreguAG"
           git add datos_clima/*
-          git commit -m "Actualización automática de datos climáticos - $(date +'%Y-%m-%d')"
+          git commit -m "Actualización automática: $(date +'%Y-%m-%d %H:%M')"
           git push
