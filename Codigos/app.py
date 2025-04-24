@@ -2,75 +2,67 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
+from selenium.webdriver.chrome.options import Options
 import csv
-import time
+from time import sleep
+import os
+from datetime import datetime
 
-url = "https://www.tiempo3.com/south-america/peru/huancavelica?page=past-weather"
+# Configurar Chrome en modo headless
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 
-# Configurar Selenium con Chrome (modo headless opcional)
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # Ejecutar en segundo plano
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
+# Crear carpeta si no existe
+os.makedirs('datos_clima', exist_ok=True)
 
-# Ruta a tu chromedriver (ajústala)
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-driver.get(url)
+# Generar nombre de archivo con fecha
+fecha_actual = datetime.now().strftime('%Y%m%d')
+nombre_archivo = f'datos_clima/dato_{fecha_actual}.csv'
+
+
+# Inicializar el driver
+driver = webdriver.Chrome(options=chrome_options)
 
 try:
-    # Esperar hasta que la tabla esté presente (hasta 20 segundos)
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "table.weather_table.day_table")))
+    driver.get("https://www.tiempo3.com/south-america/peru/huancavelica?page=today")
     
-    # Dar tiempo adicional si es necesario (ajustable)
-    time.sleep(3)
+    # Esperar a que la página cargue
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "#day-table"))
+    )
+    # Hacer clic en el botón "Hora por hora"
+    hour_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "button#intervals-1")))
+    driver.execute_script("arguments[0].click();", hour_button)
     
-    # Parsear el HTML con BeautifulSoup
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    table = soup.select_one("table.weather_table.day_table")
+    # Esperar a que cargue la tabla
+    sleep(3)  # Espera explícita para carga dinámica
     
-    if not table:
-        raise ValueError("Tabla no encontrada después de la espera.")
+    # Obtener la tabla
+    table = driver.find_element(By.CSS_SELECTOR, "table.weather_table.day_table_24")
     
-    # Extraer horas (encabezados)
-    header_row = table.thead.find("tr")
-    horas = [td.get_text(strip=True) for td in header_row.find_all("td")]
-
-    # Extraer filas de datos (igual que antes)
-    data_rows = []
-    for row in table.tbody.find_all("tr"):
-        row_header = row.th.get_text(strip=True)
-        celdas = row.find_all("td")
-        
-        valores = []
-        for celda in celdas:
-            if row_header == "Temperatura":
-                valor = celda.find("span", class_="day_temp").get("data-temp", "").replace(".", ",")
-            elif row_header == "Clima":
-                valor = celda.find("div", class_="weather_des").get_text(strip=True)
-            elif row_header == "Precipitaciones":
-                valor = celda.find("span").get("data-length", "").replace(".", ",")
-            elif row_header in ["Velocidad del viento", "Ráfaga de viento"]:
-                valor = celda.find("span", class_="day_wind").get("data-wind", "").replace(".", ",")
-            elif row_header == "Visibilidad":
-                valor = celda.find("span", class_="visibility").get("data-wind", "")
-            else:
-                valor = celda.get_text(strip=True).replace("%", "").replace("Km/h", "").strip()
-            valores.append(valor)
-        
-        data_rows.append([row_header] + valores)
+    # Extraer cabeceras (horas)
+    headers = [th.text for th in table.find_elements(By.CSS_SELECTOR, "thead th")][1:]  # Excluir el th vacío
+    
+    # Extraer filas de datos
+    data = []
+    for row in table.find_elements(By.CSS_SELECTOR, "tbody tr"):
+        cells = row.find_elements(By.TAG_NAME, "td")
+        if not cells:
+            continue
+            
+        row_name = row.find_element(By.TAG_NAME, "th").text
+        row_data = [cell.text.replace("\n", " ") for cell in cells]
+        data.append([row_name] + row_data)
 
     # Guardar en CSV
-    with open("tiempo_huancavelica_selenium.csv", "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f, delimiter=";")
-        writer.writerow(["Metrica"] + horas)
-        writer.writerows(data_rows)
-        
-    print("¡Datos guardados en tiempo_huancavelica_selenium.csv!")
+    with open(nombre_archivo, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Hora"] + headers)  # Escribir cabeceras
+        writer.writerows(data)  # Escribir datos
+    print(f"Datos guardados en: {nombre_archivo}")
 
 finally:
-    driver.quit()  # Cerrar el navegador siempre
+    driver.quit()
