@@ -28,6 +28,7 @@ jobs:
         run: mkdir -p datos_clima
           
       - name: Ejecutar scraper
+        working-directory: ./Codigos  # Cambiamos el directorio de trabajo
         run: python clima_scraper.py
         
       - name: Commit y Push
