@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Cargar el dataset
-file_path = './dataset_huancavelica.xlsx'
+file_path = './Codigos/dataset_huancavelica.xlsx'
 df = pd.read_excel(file_path)
+# Si no les funciona: pip install openpyxl
 
 # Mostrar las columnas del dataset
 print("Columnas del dataset:")

@@ -51,7 +51,7 @@ try:
     
     # Obtener la tabla
     table = driver.find_element(By.CSS_SELECTOR, "table.weather_table.day_table_24")
-    
+
     # Extraer cabeceras (horas)
     headers = [th.text for th in table.find_elements(By.CSS_SELECTOR, "thead th")][1:]  # Excluir el th vacío
     
