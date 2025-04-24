@@ -11,6 +11,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necesario para que funcione el auto-commit
       
       - name: Configurar Python
         uses: actions/setup-python@v4
@@ -37,14 +39,13 @@ jobs:
         run: |
           python clima_scraper.py
           
-      - name: Commit y Push
+      - name: Git Commit and Push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Actualización automática: $(date +'%Y-%m-%d %H:%M')"
+          commit_user_name: "Diogo Abregu [bot]"
+          commit_user_email: diogo.abregu.g@uni.pe
+          branch: main  # Asegurar que empuja a la rama correcta
+          file_pattern: datos_clima/*  # Solo commitear los archivos de datos
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token automático de GitHub
-        run: |
-          git config --global user.email "diogo.abregu.g@uni.pe"
-          git config --global user.name "DiogoFabricioAG"
-          git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@github.com/${{ github.repository }}.git"
-          git add datos_clima/*
-          git commit -m "Actualización automática: $(date +'%Y-%m-%d %H:%M')"
-          git pull --rebase  # Actualizar antes de push
-          git push origin HEAD:main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
