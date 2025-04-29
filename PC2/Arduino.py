@@ -1,7 +1,6 @@
 import serial
 import time
 import csv
-import os
 from datetime import datetime
 
 puerto_arduino = 'COM9'
@@ -58,7 +57,7 @@ while True:
                 escritor = csv.writer(archivo)
                 escritor.writerow([hora_actual, LdrValorAnalog, LdrValorVoltaje, LdrResistencia, Temperatura, Humedad])
 
-        time.sleep(1)
+        time.sleep(5)
 
     except Exception as e:
         print(f"Error al leer del puerto serial: {e}")
