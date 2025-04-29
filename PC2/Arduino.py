@@ -1,6 +1,7 @@
 import serial
 import time
 import csv
+import os
 from datetime import datetime
 
 puerto_arduino = 'COM5'
@@ -13,7 +14,7 @@ except Exception as e:
     print(f"Error al conectar con el puerto {puerto_arduino}: {e}")
     exit()
 
-nombre_archivo = 'datos_arduino.csv'
+nombre_archivo = 'PC2/datos_arduino.csv'
 
 with open(nombre_archivo, mode='w', newline='') as archivo:
     escritor = csv.writer(archivo)
@@ -56,11 +57,6 @@ while True:
             with open(nombre_archivo, mode='a', newline='') as archivo:
                 escritor = csv.writer(archivo)
                 escritor.writerow([hora_actual, LdrValorAnalog, LdrValorVoltaje, LdrResistencia, Temperatura, Humedad])
-
-
-
-            # El circuito divisor de voltaje se compone de una resistencia fija de 220 ohmios y el LDR, con un voltaje de entrada de 5V.
-            print(f"{hora_actual} -> Valor analogico ldr: {LdrValorAnalog}, Voltaje ldr: {LdrValorVoltaje}V, Resistencia ldr: {LdrResistencia}Ω / Temp: {Temperatura}°C, Humedad: {Humedad}%")
 
         time.sleep(1)
 
