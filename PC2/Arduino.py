@@ -4,7 +4,7 @@ import csv
 import os
 from datetime import datetime
 
-puerto_arduino = 'COM5'
+puerto_arduino = 'COM9'
 velocidad_trans = 9600  
 
 try:
