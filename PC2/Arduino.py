@@ -13,7 +13,7 @@ except Exception as e:
     print(f"Error al conectar con el puerto {puerto_arduino}: {e}")
     exit()
 
-nombre_archivo = 'PC2/datos_arduino.csv'
+nombre_archivo = 'PC2/Datos_Arduino.csv'
 
 with open(nombre_archivo, mode='w', newline='') as archivo:
     escritor = csv.writer(archivo)
@@ -51,12 +51,13 @@ while True:
             LdrResistencia = calcular_RLDR(LdrValorVoltaje, 5.0, 220)
             LdrResistencia = round(LdrResistencia, 2)
 
-            hora_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            Hora = datetime.now().strftime('%H:%M:%S')
 
             with open(nombre_archivo, mode='a', newline='') as archivo:
                 escritor = csv.writer(archivo)
-                escritor.writerow([hora_actual, LdrValorAnalog, LdrValorVoltaje, LdrResistencia, Temperatura, Humedad])
+                escritor.writerow([Hora, LdrValorAnalog, LdrValorVoltaje, LdrResistencia, Temperatura, Humedad])
 
+        # Esperar 5 segundos antes de la siguiente lectura
         time.sleep(5)
 
     except Exception as e:
