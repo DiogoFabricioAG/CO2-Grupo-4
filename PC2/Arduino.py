@@ -13,7 +13,7 @@ except Exception as e:
     print(f"Error al conectar con el puerto {puerto_arduino}: {e}")
     exit()
 
-nombre_archivo = 'PC2/Datos_Arduino.csv'
+nombre_archivo = 'Datos_Arduino.csv'
 
 with open(nombre_archivo, mode='w', newline='') as archivo:
     escritor = csv.writer(archivo)
