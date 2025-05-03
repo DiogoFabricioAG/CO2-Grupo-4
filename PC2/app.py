@@ -7,7 +7,7 @@ st.set_page_config(page_title="Monitor Sensor", layout="centered")
 
 st.title("📊 Monitor de Sensores en Tiempo Real")
 
-nombre_archivo = 'PC2/Datos_Arduino.csv'
+nombre_archivo = 'PC2/datos_arduino_simulado.csv'
 
 # Cargar los datos
 @st.cache_data(ttl=1)
@@ -23,7 +23,7 @@ while True:
     df = cargar_datos()
 
     with placeholder.container():
-        st.subheader("Gráfico del LDR")
+        st.subheader("Gráfico del Voltaje del LDR")
         chart1 = alt.Chart(df).mark_line().encode(
             x='Hora:T',
             y='LdrValorAnalog:Q'
@@ -43,7 +43,5 @@ while True:
             y='Humedad:Q'
         ).properties(height=200)
         st.altair_chart(chart3, use_container_width=True)
-
-        st.subheader("Gráfico de ")
 
     time.sleep(1)

@@ -2,6 +2,10 @@ import random
 import time
 import csv
 from datetime import datetime
+import serial
+
+puerto_arduino = 'COM5'
+velocidad_trans = 9600 
 
 nombre_archivo = 'PC2/datos_arduino_simulado.csv'
 
@@ -9,12 +13,18 @@ with open(nombre_archivo, mode='w', newline='') as archivo:
     escritor = csv.writer(archivo)
     escritor.writerow(['Hora', 'LdrValorAnalog', 'LdrVoltaje', 'LdrResistencia', 'Temperatura', 'Humedad'])
 
+try:
+    s = serial.Serial(puerto_arduino, velocidad_trans, timeout=1)
+    print(f"Conexión establecida en {puerto_arduino} a {velocidad_trans}")
+except Exception as e:  
+    print(f"Error al conectar con el puerto {puerto_arduino}: {e}")
+    exit()
+
 def leer_datos():
-    # Simulación de datos similares a los reales:
-    LdrValorAnalog = random.uniform(0.0, 10.0)   # Similar a lo que viste: entre 0 y 10 aprox
-    Temperatura = random.uniform(25.0, 27.0)     # Entre 25°C y 27°C
-    Humedad = random.uniform(44.0, 46.0)         # Entre 44% y 46%
-    return f"{LdrValorAnalog},{Temperatura},{Humedad}"
+    if s.in_waiting > 0:
+        data = s.readline().decode('utf-8').strip()
+        return data
+    return None
 
 def calcular_RLDR(Vout, Vin, Rfija):
     if Vin == Vout:
