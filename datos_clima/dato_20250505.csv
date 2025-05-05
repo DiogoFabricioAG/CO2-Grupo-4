@@ -1,0 +1,15 @@
+Hora
+Temperatura,8° C,8° C,7° C,7° C,6° C,6° C,9° C,10° C,13° C,15° C,17° C,18° C,18° C,18° C,17° C,15° C,14° C,13° C,8° C,8° C,8° C,8° C,8° C,8° C
+Clima,Lluvia moderada a intervalos,Ligeras precipitaciones,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Despejado,Despejado,Parcialmente nublado,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Parcialmente nublado,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Intervalos de lluvias ligeras con tomenta en la región,Ligeras precipitaciones,Ligeras precipitaciones,Ligeras precipitaciones,Ligeras precipitaciones,Ligeras precipitaciones,Ligeras precipitaciones,Ligeras precipitaciones,Ligeras precipitaciones
+Probabilidad de lluvia,100%,100%,100%,100%,100%,0%,0%,0%,61%,84%,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%,100%
+Precipitaciones,"0,2 mm","0,2 mm","0,1 mm","0,1 mm","0,1 mm",0 mm,0 mm,0 mm,0 mm,0 mm,"0,2 mm","0,4 mm","0,6 mm","0,6 mm","0,8 mm",1 mm,"0,9 mm","0,5 mm","0,7 mm","0,5 mm","0,3 mm","0,2 mm","0,4 mm","0,4 mm"
+Probabilidad de nevada,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+Probabilidad de heladas,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+Humedad,89%,89%,90%,91%,91%,91%,92%,91%,83%,73%,65%,60%,64%,64%,70%,81%,91%,95%,98%,99%,99%,99%,99%,99%
+Velocidad del viento,5Km/h,5Km/h,6Km/h,7Km/h,8Km/h,8Km/h,9Km/h,9Km/h,8Km/h,8Km/h,7Km/h,9Km/h,9Km/h,6Km/h,7Km/h,8Km/h,6Km/h,6Km/h,5Km/h,5Km/h,4Km/h,3Km/h,2Km/h,1Km/h
+Ráfaga de viento,11Km/h,11Km/h,14Km/h,15Km/h,17Km/h,17Km/h,14Km/h,12Km/h,10Km/h,9Km/h,8Km/h,10Km/h,11Km/h,8Km/h,9Km/h,11Km/h,10Km/h,10Km/h,10Km/h,10Km/h,8Km/h,5Km/h,3Km/h,1Km/h
+Ángulo del viento,50°,57°,67°,65°,57°,59°,58°,59°,68°,81°,100°,113°,125°,160°,212°,225°,222°,227°,221°,235°,240°,226°,223°,244°
+Dirección del viento,NE,ENE,ENE,ENE,ENE,ENE,ENE,ENE,ENE,E,E,ESE,SE,SSE,SSW,SW,SW,SW,SW,SW,WSW,SW,SW,WSW
+Nubosidad,75%,56%,67%,75%,55%,19%,21%,27%,76%,86%,84%,82%,75%,82%,87%,73%,70%,72%,91%,100%,100%,100%,100%,100%
+Índice UV,0,0,0,0,0,0,0,0,1,1,4,8,11,9,3,1,0,0,0,0,0,0,0,0
+Visibilidad,9 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,9 Km,10 Km,9 Km,9 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km
