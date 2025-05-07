@@ -1,0 +1,15 @@
+Hora
+Temperatura,6° C,5° C,5° C,5° C,4° C,4° C,4° C,10° C,13° C,15° C,17° C,18° C,19° C,19° C,19° C,19° C,17° C,15° C,8° C,7° C,7° C,6° C,6° C,6° C
+Clima,Parcialmente nublado,Despejado,Despejado,Despejado,Despejado,Despejado,Despejado,Soleado,Soleado,Soleado,Soleado,Soleado,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Lluvia moderada a intervalos,Parcialmente nublado,Lluvia moderada a intervalos,Parcialmente nublado,Parcialmente nublado
+Probabilidad de lluvia,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,81%,73%,100%,100%,100%,100%,100%,65%,0%,74%,0%,0%
+Precipitaciones,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,0 mm,"0,2 mm","0,1 mm","0,1 mm","0,1 mm","0,1 mm",0 mm,0 mm,0 mm,0 mm,0 mm
+Probabilidad de nevada,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+Probabilidad de heladas,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%,0%
+Humedad,90%,89%,89%,88%,88%,88%,88%,86%,75%,66%,57%,50%,52%,46%,46%,51%,64%,76%,90%,93%,93%,93%,92%,91%
+Velocidad del viento,5Km/h,5Km/h,5Km/h,5Km/h,5Km/h,6Km/h,7Km/h,7Km/h,5Km/h,5Km/h,5Km/h,5Km/h,6Km/h,6Km/h,6Km/h,7Km/h,8Km/h,8Km/h,6Km/h,4Km/h,1Km/h,3Km/h,5Km/h,6Km/h
+Ráfaga de viento,10Km/h,10Km/h,10Km/h,10Km/h,11Km/h,14Km/h,14Km/h,9Km/h,6Km/h,6Km/h,6Km/h,6Km/h,7Km/h,7Km/h,7Km/h,8Km/h,9Km/h,10Km/h,14Km/h,8Km/h,3Km/h,6Km/h,11Km/h,14Km/h
+Ángulo del viento,37°,38°,38°,40°,47°,52°,55°,58°,76°,99°,122°,137°,146°,156°,174°,212°,230°,244°,253°,265°,305°,33°,43°,44°
+Dirección del viento,NE,NE,NE,NE,NE,NE,NE,ENE,ENE,E,ESE,SE,SE,SSE,S,SSW,SW,WSW,WSW,W,NW,NNE,NE,NE
+Nubosidad,25%,23%,22%,21%,17%,16%,17%,17%,13%,9%,5%,3%,25%,71%,73%,86%,73%,71%,72%,83%,27%,86%,44%,32%
+Índice UV,0,0,0,0,0,0,0,0,2,5,9,12,14,13,8,4,3,1,0,0,0,0,0,0
+Visibilidad,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km,10 Km
