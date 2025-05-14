@@ -11,25 +11,28 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Necesario para que funcione el auto-commit
       
       - name: Configurar Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
           
-      - name: Instalar Chrome
+      - name: Instalar Chrome y Chromedriver compatible
         uses: browser-actions/setup-chrome@v1
         with:
-          chrome-version: stable  # Versión estable de Chrome
+          chrome-version: "stable"
+          check-latest: true
+          
+      - name: Configurar entorno de Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgbm-dev
+          sudo ln -s /usr/bin/chromium-browser /usr/bin/google-chrome
           
       - name: Instalar dependencias
         run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-chromedriver
-          python -m pip install -r requirements.txt
-          
+          python -m pip install --upgrade pip
+          python -m pip install selenium webdriver-manager
           
       - name: Ejecutar scraper
         working-directory: ./PARCIAL
@@ -39,9 +42,9 @@ jobs:
       - name: Git Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Obtencíon Mensual de datos del BCRP"
+          commit_message: "Obtención Mensual de datos del BCRP"
           commit_user_name: "Diogo Abregu [bot]"
           commit_user_email: diogo.abregu.g@uni.pe
           branch: main  
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
