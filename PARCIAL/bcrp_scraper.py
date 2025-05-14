@@ -53,6 +53,7 @@ def main():
     filename = "bcrp_bonos.csv"
     headers, scraped_data = obtener_datos()
     
+
     # Verificar últimos datos existentes
     last_date = None
     if os.path.exists(filename):

@@ -1,0 +1,47 @@
+name: Scrape BCRP Mensual
+
+on:
+  schedule:
+    - cron: "0 18 1 * *"  # 1 PM hora peruana (UTC-5) el primer día de cada mes
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necesario para que funcione el auto-commit
+      
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          
+      - name: Instalar Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable  # Versión estable de Chrome
+          
+      - name: Instalar dependencias
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-chromedriver
+          python -m pip install -r requirements.txt
+          
+          
+      - name: Ejecutar scraper
+        working-directory: ./PARCIAL
+        run: |
+          python bcrp_scraper.py
+          
+      - name: Git Commit and Push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Obtencíon Mensual de datos del BCRP"
+          commit_user_name: "Diogo Abregu [bot]"
+          commit_user_email: diogo.abregu.g@uni.pe
+          branch: main  
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
