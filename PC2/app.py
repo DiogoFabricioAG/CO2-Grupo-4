@@ -7,7 +7,7 @@ st.set_page_config(page_title="Monitor Sensor", layout="centered")
 
 st.title("📊 Monitor de Sensores en Tiempo Real")
 
-nombre_archivo = 'PC2/datos_arduino_simulado.csv'
+nombre_archivo = 'Datos_Arduino.csv'
 
 # Cargar los datos
 @st.cache_data(ttl=1)
