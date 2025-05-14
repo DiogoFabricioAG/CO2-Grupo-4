@@ -1,0 +1,49 @@
+name: Scrape FED Diario
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"  # 6 AM hora peruana (UTC-5) → 11:00 UTC
+  workflow_dispatch:
+
+jobs: 
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          
+      - name: Instalar Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: "stable"
+          check-latest: true
+          
+      - name: Configurar dependencias del sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgbm-dev
+          
+      - name: Instalar dependencias Python
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install selenium webdriver-manager
+          
+      - name: Ejecutar scraper FED
+        working-directory: ./PARCIAL
+        run: |
+          python fed_scraper.py
+          
+      - name: Git Commit and Push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Actualización diaria de tasas FED"
+          commit_user_name: "Diogo Abregu [bot]"
+          commit_user_email: diogo.abregu.g@uni.pe
+          branch: main  
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
