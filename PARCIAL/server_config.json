@@ -1,0 +1,15 @@
+{
+    "mcpServers":{
+        "pg-server": {
+        "command": "uv",
+        "args": [
+            "run",
+            "--with",
+            "mcp[cli]",
+            "mcp",
+            "run",
+            "D://UNI/6TO CICLO/ANALITICA DE DATOS/Proyecto SI150/PARCIAL/climate_db_server.py"
+        ]
+        }
+    }
+}
