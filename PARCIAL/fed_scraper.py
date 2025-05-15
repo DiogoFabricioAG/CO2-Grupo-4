@@ -20,7 +20,7 @@ def obtener_tasas_fed():
     
     try:
         driver.get(url)
-        wait = WebDriverWait(driver, 20)
+        wait = WebDriverWait(driver, 60)
         tabla = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.table")))
 
         filas = tabla.find_elements(By.TAG_NAME, "tr")[1:]  # saltar encabezado
