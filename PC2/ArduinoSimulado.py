@@ -2,29 +2,20 @@ import random
 import time
 import csv
 from datetime import datetime
-import serial
+import os
 
-puerto_arduino = 'COM5'
-velocidad_trans = 9600 
-
-nombre_archivo = 'PC2/datos_arduino_simulado.csv'
+nombre_archivo = "D:/UNI/6TO CICLO/ANALITICA DE DATOS/Proyecto SI150/PC2/datos_arduino_simulado.csv"
 
 with open(nombre_archivo, mode='w', newline='') as archivo:
     escritor = csv.writer(archivo)
-    escritor.writerow(['Hora', 'LdrValorAnalog', 'LdrVoltaje', 'LdrResistencia', 'Temperatura', 'Humedad'])
-
-try:
-    s = serial.Serial(puerto_arduino, velocidad_trans, timeout=1)
-    print(f"Conexión establecida en {puerto_arduino} a {velocidad_trans}")
-except Exception as e:  
-    print(f"Error al conectar con el puerto {puerto_arduino}: {e}")
-    exit()
+    escritor.writerow(['Dia', 'Hora', 'LdrValorAnalog', 'LdrVoltaje', 'LdrResistencia', 'Temperatura', 'Humedad'])
 
 def leer_datos():
-    if s.in_waiting > 0:
-        data = s.readline().decode('utf-8').strip()
-        return data
-    return None
+    # Simulación de datos similares a los reales:
+    LdrValorAnalog = random.uniform(0.0, 10.0)   # Similar a lo que viste: entre 0 y 10 aprox
+    Temperatura = random.uniform(25.0, 27.0)     # Entre 25°C y 27°C
+    Humedad = random.randint(40, 46)         # Entre 44% y 46%
+    return f"{LdrValorAnalog},{Temperatura},{Humedad}"
 
 def calcular_RLDR(Vout, Vin, Rfija):
     if Vin == Vout:
@@ -37,11 +28,11 @@ while True:
         data = leer_datos()
         if data:
             data = data.split(',')
-            LdrValorAnalog = float(data[0])
+            LdrValorAnalog = round(float(data[0]),2)
             if LdrValorAnalog == 0:
                 LdrValorAnalog = 0.1
-            Temperatura = float(data[1])
-            Humedad = float(data[2])
+            Temperatura = round(float(data[1]),2)
+            Humedad = int(data[2])
 
             LdrValorVoltaje = (LdrValorAnalog / 1023.0) * 5.0
             LdrValorVoltaje = round(LdrValorVoltaje, 4)
@@ -49,16 +40,18 @@ while True:
             LdrResistencia = calcular_RLDR(LdrValorVoltaje, 5.0, 220)
             LdrResistencia = round(LdrResistencia, 2)
 
-            hora_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now = datetime.now()
+            dia_actual = now.strftime('%Y-%m-%d')
+            hora_actual = now.strftime('%H:%M:%S')
 
             with open(nombre_archivo, mode='a', newline='') as archivo:
                 escritor = csv.writer(archivo)
-                escritor.writerow([hora_actual, LdrValorAnalog, LdrValorVoltaje, LdrResistencia, Temperatura, Humedad])
+                escritor.writerow([dia_actual, hora_actual, LdrValorAnalog, LdrValorVoltaje, LdrResistencia, Temperatura, Humedad])
 
-            print(f"Hora: {hora_actual}, LDR: {LdrValorAnalog}, Voltaje: {LdrValorVoltaje}, "
+            print(f"Dia: {dia_actual}, Hora: {hora_actual}, LDR: {LdrValorAnalog}, Voltaje: {LdrValorVoltaje}, "
                   f"Resistencia: {LdrResistencia}, Temp: {Temperatura}, Humedad: {Humedad}")
 
-        time.sleep(1)
+        time.sleep(5)
 
     except Exception as e:
         print(f"Error al simular datos: {e}")

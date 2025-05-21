@@ -1,7 +1,7 @@
 # climate_db_server.py
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.prompts import base
-
+import requests
 import os
 import psycopg2
 import json
@@ -23,30 +23,100 @@ except psycopg2.Error as e:
     print(f"Error al conectar a PostgreSQL: {e}")
     exit()
 
-
-@mcp.tool(name="Registrar datos tiempo real", description="Registra datos de tiempo real en la base de datos PostgreSQL.")
-def register_real_time_data(data: str) -> str:
+@mcp.tool(description="Devuelve los valores de Longitud y Latitud de una Ciudad utilizando una Api Externa.")
+def get_lat_long(city: str) -> str:
     """
-    Registra datos de tiempo real en la base de datos PostgreSQL.
+    Obtiene la latitud y longitud de una ciudad utilizando la API de Open Meteo.
     
     Args:
-        data (str): Datos a registrar en formato JSON.
+        city (str): Nombre de la ciudad.
+    
+    Returns:
+        str: Latitud y longitud de la ciudad en formato JSON.
+    """
+    url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1&language=en&format=json"
+    
+    try:
+        response = requests.get(url)
+        data = json.loads(response.text)
+        # Verifica si la respuesta es exitosa
+        if response.status_code == 200:
+            lat = data["results"][0]['latitude']
+            lon = data["results"][0]['longitude']
+            return json.dumps({"lat": lat, "lon": lon})
+        else:
+            return f"Error: {data['message']}"
+    except Exception as e:
+        return f"Error al obtener datos: {e}"
+
+@mcp.tool(description="Devuelve el clima actual de una ciudad utilizando una Api Externa.")
+def get_wheather(lat: str, lon: str) -> str:
+    """
+    Obtiene el clima actual de una ciudad utilizando la API de Open Meteo.
+    
+    Args:
+        lat (str): Latitud de la ciudad.
+        lon (str): Longitud de la ciudad.
+    
+    Returns:
+        str: Clima actual de la ciudad en formato JSON.
+    """
+    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&daily=temperature_2m_max,weather_code&hourly=temperature_2m&timezone=auto&forecast_days=1"
+    
+    try:
+        response = requests.get(url)
+        data = json.loads(response.text)
+        # Verifica si la respuesta es exitosa
+        if response.status_code == 200:
+            return json.dumps(data, indent=2)
+        else:
+            return f"Error: {data['message']}"
+    except Exception as e:
+        return f"Error al obtener datos: {e}"
+
+@mcp.tool(description="Registra datos de tiempo real en la base de datos PostgreSQL.")
+def register_real_time_data() -> str:
+    """
+    Registra datos de tiempo real en la base de datos PostgreSQL.
     
     Returns:
         str: Mensaje de éxito o error.
     """
     try:
-        data_dict = json.loads(data)
         cursor.execute("""
-            INSERT INTO weather_data (temperature, humidity, wind_speed, timestamp)
-            VALUES (%s, %s, %s, NOW())
-        """, (data_dict["temperature"], data_dict["humidity"], data_dict["wind_speed"]))
+            COPY sensor_data(Dia, Hora, LdrValorAnalog, LdrVoltaje, LdrResistencia, Temperatura, Humedad)
+            FROM 'd:/UNI/6TO CICLO/ANALITICA DE DATOS/Proyecto SI150/PC2/datos_arduino_simulado.csv'
+            DELIMITER ','
+            CSV HEADER;
+        """)
         conn.commit()
         return "Datos registrados exitosamente."
     except Exception as e:
         conn.rollback()
         return f"Error al registrar datos: {e}"
     
+@mcp.tool(description="Elimina duplicados por una ejecucion incorrecta de la herramienta de register.")
+def eliminar_duplicados() -> str:
+    """
+    Elimina duplicados en la tabla sensor_data.
+    
+    Returns:
+        str: Mensaje de éxito o error.
+    """
+    try:
+        cursor.execute("""
+            DELETE FROM sensor_data
+            WHERE ctid NOT IN (
+                SELECT MIN(ctid)
+                FROM sensor_data
+                GROUP BY Dia, Hora, LdrValorAnalog, LdrVoltaje, LdrResistencia, Temperatura, Humedad
+            );
+        """)
+        conn.commit()
+        return "Duplicados eliminados exitosamente."
+    except Exception as e:
+        conn.rollback()
+        return f"Error al eliminar duplicados: {e}"
 
 @mcp.tool(name="query", description="Ejecuta una consulta SQL en la base de datos PostgreSQL, es una base de datos sobre el clima.")
 def run_query(sql: str) -> str:
@@ -72,29 +142,35 @@ def run_query(sql: str) -> str:
 
 
 
-@mcp.resource("columns://{table}")
-def get_table_schema(table: str) -> str:
+@mcp.resource("columns://data")
+def get_table_columns() -> str:
     """
-    Retorna las columnas y tipos de datos de una tabla dada.
-    
-    Args:
-        table (str): Nombre de la tabla en la base de datos.
+    Retorna las columnas de una tabla dada. Aparte se da el nombre de la tabla "sensor_data"
     
     Returns:
         str: Json de los nombres de las columnas y sus tipos de datos.
     """
-    try:
-        cursor.execute("""
-            SELECT column_name, data_type
-            FROM information_schema.columns
-            WHERE table_name = %s
-        """, (table,))
-        rows = cursor.fetchall()
-        schema = [{"column": row[0], "type": row[1]} for row in rows]
-        return json.dumps(schema, indent=2)
-    except Exception as e:
-        return f"Error fetching schema for table '{table}': {e}"
-    
+    return {
+        "hora": "time",
+        "dia": "date",
+        "temperatura": "float",
+        "ldrvaloranalog":"float",
+        "ldrvoltaje":"float",
+        "ldresistencia":"float",
+        "humedad": "integer",
+    }
+
+@mcp.resource("data://table")
+def get_nombre_tabla() -> str:
+    """
+    Retorna el nombre de la tabla.
+    Args:
+        table (str): Nombre de la tabla en la base de datos.
+
+    Returns:
+        str: Nombre de la tabla.
+    """
+    return f"Nombre de la tabla: sensor_data"
 
 @mcp.prompt()
 def viabilidad_destino(destino:str) -> str:
