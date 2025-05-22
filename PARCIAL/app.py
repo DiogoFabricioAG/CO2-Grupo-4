@@ -8,7 +8,15 @@ st.set_page_config(page_title="Monitor Sensor", layout="centered")
 
 st.title("📊 Monitor de Sensores en Tiempo Real")
 
-nombre_archivo = 'Datos_arduino.csv'
+st.markdown("""
+### 🟩 Leyenda de colores
+- 🟩 **Verde**: Valor normal  
+- 🔵 **Azul**: Valor bajo (solo en temperatura)  
+- 🟥 **Rojo**: Valor alto o crítico  
+- 🟨 **Amarillo**: Precaución (en humedad y lux moderado)
+""")
+
+nombre_archivo = 'PARCIAL\Datos_arduino.csv'
 
 # Función para convertir LDR a lux (aproximada)
 def ldr_to_lux(ldr_val):
@@ -39,17 +47,15 @@ def riesgo_solar(nivel):
         return "Seguro"
 
 def recomendacion(nivel):
-    if nivel == "Baja":
+    if nivel == "Seguro":
         return "No se requiere protección solar"
-    elif nivel == "Moderada":
+    elif nivel == "Precaución":
         return "Usar sombrero o protector solar"
-    elif nivel == "Alta":
+    elif nivel == "Peligroso":
         return "Usar protector solar y gafas de sol"
-    elif nivel == "Muy Alta":
-        return "Evitar exposición prolongada"
     else:
-        return "Permanecer bajo sombra o en interiores"
-
+        return "Evitar exposición prolongada"
+    
 # Funciones de color
 def color_lux(nivel):
     if nivel == "Baja":
